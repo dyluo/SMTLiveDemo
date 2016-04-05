@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:background="@mipmap/bg_video_top"
+    android:id="@+id/toolbar"
+    android:paddingLeft="@dimen/padding15"
+    android:paddingRight="@dimen/padding15"
+    android:paddingBottom="5dp">
+    <ImageButton
+        android:layout_alignParentBottom="true"
+        android:id="@+id/iv_arrow_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/btn_back"/>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/txt_size18"
+        android:layout_toRightOf="@+id/iv_arrow_left"/>
+
+    <LinearLayout
+        android:gravity="bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true" >
+        <TextView
+            android:id="@+id/tv_angle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="视角"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/txt_size16"
+            android:paddingRight="@dimen/padding15"/>
+
+        <TextView
+            android:id="@+id/tv_ratio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="画质"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/txt_size16"
+            android:paddingRight="@dimen/padding15"/>
+
+        <TextView
+            android:id="@+id/tv_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="设置"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/txt_size16"
+            android:paddingRight="@dimen/padding15"/>
+
+        <ImageButton
+            android:id="@+id/tv_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/padding15"
+            android:background="@mipmap/btn_share"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/full"
+            android:background="@mipmap/btn_full"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

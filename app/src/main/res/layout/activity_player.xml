@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".VideoActivity"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- The main content view -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+            <include layout="@layout/video_play"/>
+
+            <include layout="@layout/ll_video_content"/>
+        </LinearLayout>
+        <include layout="@layout/video_top"/>
+        <include layout="@layout/item_comment_send"/>
+    </FrameLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/float_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/btn_play_f"
+        app:backgroundTint="@color/colorFloatAction"
+        app:backgroundTintMode="multiply"
+        app:layout_anchor="@+id/rl_video"
+        app:layout_anchorGravity="bottom|end|right"
+        android:layout_margin="@dimen/padding15"/>
+</android.support.design.widget.CoordinatorLayout>

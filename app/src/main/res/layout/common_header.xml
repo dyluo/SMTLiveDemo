@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="@dimen/action_bar_height"
+    android:background="@color/colorPrimary" >
+    <ImageView
+        android:layout_marginRight="@dimen/padding15"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/iv_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_dialog_info"/>
+
+    <TextView
+        android:id="@+id/action_bar_title"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/txt_size18" />
+
+    <ImageView
+        android:id="@+id/iv_arrow_left"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_keyboard_arrow_left_32dpdp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_share"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="分享"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/txt_size16"
+        android:layout_alignParentRight="true"
+        android:paddingRight="@dimen/padding15"
+        android:visibility="gone"/>
+</RelativeLayout>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/bg_video_bottom"
+    android:id="@+id/rl_video_bottom">
+
+    <TextView
+        android:id="@+id/btn_play"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="播放/停住"
+        android:textSize="@dimen/txt_size16"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:layout_marginLeft="@dimen/padding15"
+        android:layout_toRightOf="@+id/btn_play"
+        android:id="@+id/tvWatchers"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="123人观看"
+        android:textSize="@dimen/txt_size14"
+        android:textColor="@android:color/white"/>
+
+
+    <TextView
+        android:id="@+id/tv_send_switch"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/tv_send"
+        android:paddingRight="@dimen/padding15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="弹幕开"
+        android:textSize="@dimen/txt_size16"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/tv_send"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/tv_full_screen"
+        android:paddingRight="@dimen/padding15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发弹幕"
+        android:textSize="@dimen/txt_size16"
+        android:textColor="@android:color/white"/>
+
+
+    <TextView
+        android:id="@+id/tv_full_screen"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:paddingRight="@dimen/padding15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="全屏"
+        android:textSize="@dimen/txt_size16"
+        android:textColor="@android:color/white"/>
+</RelativeLayout>

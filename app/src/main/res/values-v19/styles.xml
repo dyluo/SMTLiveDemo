@@ -1,0 +1,9 @@
+<resources>
+    <style name="FullBleedTheme" parent="AppTheme">
+        <!-- API 19 theme customizations can go here. -->
+    </style>
+
+    <style name="AppTheme.Transparent" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+</resources>

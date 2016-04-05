@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#54d896</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="ijk_transparent_dark">#77000000</color>
+    <color name="colorCityDay">#95777272</color>
+
+    <color name="colorFloatAction">#54d896</color>
+    <color name="colorTitleFirst">#72788a</color>
+    <color name="colorInfos">#888c98</color>
+
+    <color name="colorDiv">#e2e2e2</color>
+    <color name="colorBgF1f1f1">#f1f1f1</color>
+    <color name="colorTitleComment">#7d8292</color>
+    <color name="colorContentComment">#bdbfc5</color>
+    <color name="colorTimeComment">#cbcaca</color>
+    <color name="color888c98">#888c98</color>
+</resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding15"
+        android:paddingRight="@dimen/padding15"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+        <ImageView
+            android:id="@+id/ic_head"
+            android:layout_width="@dimen/user_profile_avatar_size"
+            android:layout_height="@dimen/user_profile_avatar_size"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic11"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/ic_head"
+            android:layout_marginLeft="12dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/txt_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="笑笑雨"
+                    android:textColor="@color/colorTitleComment"
+                    android:textSize="@dimen/txt_size14"/>
+
+                <TextView
+                    android:id="@+id/txt_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11:23"
+                    android:textColor="@color/colorTimeComment"
+                    android:textSize="@dimen/txt_size12"/>
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/txt_content"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我很少了快递费斯柯达"
+                android:textColor="@color/colorContentComment"
+                android:textSize="@dimen/txt_size12"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_marginLeft="@dimen/padding15"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divHeight"
+        android:background="@color/colorDiv"/>
+</LinearLayout>

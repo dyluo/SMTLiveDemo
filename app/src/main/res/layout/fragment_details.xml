@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true">
+
+            <LinearLayout
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/top24"
+                android:paddingBottom="@dimen/padding15">
+
+            <TextView
+                android:layout_marginLeft="@dimen/padding15"
+                android:layout_marginRight="120dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="巴塞罗纳FC和多特蒙德队足球俱乐部"
+                android:textSize="@dimen/txt_size21"
+                android:textColor="@color/colorTitleFirst"
+                android:lineSpacingExtra="@dimen/top6"/>
+
+            <TextView
+                android:layout_marginLeft="@dimen/padding15"
+                android:layout_marginRight="@dimen/padding15"
+                android:layout_marginTop="19dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorInfos"
+                android:textSize="@dimen/txt_size14"
+                android:lineSpacingExtra="8dp"
+                android:textScaleX="1.02"
+                android:text="@string/intors"/>
+
+            <View
+                android:layout_marginTop="19dp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divHeight"
+                android:background="@color/colorDiv"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:paddingLeft="17dp"
+                android:paddingRight="15dp">
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/ic_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_comment"/>
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/ic_comment"
+                    android:text="23评论"
+                    android:layout_centerVertical="true"/>
+
+                <ImageView
+                    android:id="@+id/ic_comment_toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_togg_close"/>
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/llComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBgF1f1f1"
+                android:orientation="vertical">
+
+            </LinearLayout>
+            <include layout="@layout/item_recommend"/>
+        </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

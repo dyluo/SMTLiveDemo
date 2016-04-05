@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rg_angle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/bg_video_bottom"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/padding15"
+    android:layout_alignParentBottom="true"
+    android:layout_centerVertical="true"
+    android:gravity="center_vertical">
+    <RadioButton
+        android:id="@+id/radio1"
+        android:text="视角1"
+        style="@style/CusRadioStyle"
+        android:checked="true"/>
+    <RadioButton
+        android:layout_marginLeft="@dimen/padding15"
+        style="@style/CusRadioStyle"
+        android:id="@+id/radio2"
+        android:text="视角2"/>
+    <RadioButton
+        android:layout_marginLeft="@dimen/padding15"
+        style="@style/CusRadioStyle"
+        android:id="@+id/radio3"
+        android:text="视角3"/>
+    <RadioButton
+        android:layout_marginLeft="@dimen/padding15"
+        style="@style/CusRadioStyle"
+        android:id="@+id/radio4"
+        android:text="视角4"/>
+
+</RadioGroup>
