@@ -14,4 +14,8 @@ public class VideoPath {
     public static final String testRtmpPath4 = "http://112.17.0.10:8085/ysten-business/live/tvb8/dujuejiami.m3u8";
 
     public static final String tt1_video1 = "http://182.92.189.193:1935/live/h_hanya_1/playlist.m3u8";
+    public static final String tt1_video2 = "http://112.17.0.10:8085/ysten-business/live/huayutv/yst.m3u8";
+    public static final String tt1_video3 = "http://112.17.0.10:8085/ysten-business/live/fhzixun/yst.m3u8";
+    public static final String tt1_video4 = testRtmpPath4;
+
 }

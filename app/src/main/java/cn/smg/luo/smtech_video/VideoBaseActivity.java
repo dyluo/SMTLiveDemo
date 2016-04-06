@@ -32,6 +32,8 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.OnClick;
 import cn.smg.luo.smtech_video.widget.media.IjkVideoView;
+import master.flame.danmaku.danmaku.model.android.DanmakuContext;
+import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import master.flame.danmaku.ui.widget.DanmakuView;
 
 /**
@@ -49,6 +51,8 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     protected static final int MESSAGE_FADE_OUT = 1;
     protected static final int TIME_HIDE_CENTER_BOX = 500;
     protected static final int TIME_FADE_OUT = 7000;
+    String currentPath;
+    String[] mVideoPaths;
     //全屏按钮
     @Bind(R.id.full) ImageButton btnFull;
     //顶部标题
@@ -91,6 +95,11 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     protected long startPlayTimes;
     @Bind(R.id.progressBar)
     protected ProgressBar mProgressBar;
+    /**
+     * 弹幕
+     */
+    protected DanmakuContext mContext;
+    protected BaseDanmakuParser mParser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,9 +148,9 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
      * @param hide
      */
     protected void hideNavigation(boolean hide){
-        if(!isLandscape){
-            return ;
-        }
+//        if(!isLandscape){
+//            return ;
+//        }
         if(hide) {
             int flags;
             int curApiVersion = android.os.Build.VERSION.SDK_INT;
@@ -191,6 +200,7 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
             hideSystemBar(false);
             tvLock.setVisibility(View.GONE);
         }
+        preparedDanMu();
 //        showVideoBottom(isLandscape);
     }
 
@@ -302,9 +312,24 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
         if (mDanmakuView != null && mDanmakuView.isPrepared() && !mDanmakuView.isPaused()) {
             mDanmakuView.hideAndPauseDrawTask();
         }else if(mDanmakuView!= null && mDanmakuView.isPaused()){
-            mDanmakuView.showAndResumeDrawTask(SystemClock.currentThreadTimeMillis()-startPlayTimes);
+            mDanmakuView.showAndResumeDrawTask(SystemClock.currentThreadTimeMillis() - startPlayTimes);
 //            mDanmakuView.show();
 //            mDanmakuView.resume();
+        }
+    }
+
+    /**
+     * 横竖屏切换的时候，初始化弹幕，或者
+     */
+    void preparedDanMu(){
+        if (mDanmakuView != null && !mDanmakuView.isPrepared()){
+            mDanmakuView.prepare(mParser, mContext);
+            return;
+        }
+        if(isLandscape && mDanmakuView!= null && mDanmakuView.isPrepared()){
+            mDanmakuView.showAndResumeDrawTask(SystemClock.currentThreadTimeMillis() - startPlayTimes);
+        }else if(!isLandscape && mDanmakuView!= null && mDanmakuView.isPrepared()){
+            mDanmakuView.hideAndPauseDrawTask();
         }
     }
     /**
@@ -329,7 +354,9 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
             ViewCompat.animate(rlVideoTop).alpha(0).translationY(-rlVideoTop.getHeight()).setDuration(500).start();
             showVideoBottom(show);
             hideSystemBar(true);
-            hideNavigation(true);
+            if(isLandscape) {
+                hideNavigation(true);
+            }
         }
     }
 
@@ -528,5 +555,17 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 
+    }
+
+    @OnClick({R.id.radio1,R.id.radio2,R.id.radio3,R.id.radio4})
+    void changeVideo(View view){
+        switch (view.getId()){
+            case R.id.radio1:
+                if(!currentPath.equals(mVideoPaths[0])){
+                    mVideoView.setVideoPath(mVideoPaths[0]);
+                    currentPath = mVideoPaths[0];
+                }
+                break;
+        }
     }
 }

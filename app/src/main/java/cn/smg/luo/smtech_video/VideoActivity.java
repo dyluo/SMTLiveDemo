@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,6 +35,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import cn.smg.luo.smtech_video.common.DensityUtils;
 import cn.smg.luo.smtech_video.common.FastBlur;
+import cn.smg.luo.smtech_video.model.VideoPath;
 import cn.smg.luo.smtech_video.view.VideoInfoFragment;
 import cn.smg.luo.smtech_video.widget.media.AndroidMediaController;
 import cn.smg.luo.smtech_video.widget.media.IMediaController;
@@ -66,19 +68,18 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 public class VideoActivity extends VideoBaseActivity{
     private static final String TAG = VideoActivity.class.getSimpleName();
 
-    private String currentPath;
+
     @Bind(R.id.ll_info)
     LinearLayout llInfo;
     @Bind(R.id.fl_info)FrameLayout flInfo;
     private boolean mBackPressed;
-    private DanmakuContext mContext;
-    private BaseDanmakuParser mParser;
 //    @Bind(R.id.btn_send) Button btnSend;
 //    @Bind(R.id.et_msg) EditText editMsg;
     private Context context;
     @Bind(R.id.rl_comment_send)RelativeLayout rlCommentSend;
     @Bind(R.id.bg_white) ImageView mBgWhite;
     private static final int mVideoHeight = 254;
+    @Bind(R.id.float_play)FloatingActionButton mFloatButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +91,7 @@ public class VideoActivity extends VideoBaseActivity{
         initBaseView();
         initDamu();
         initFragmentInfo(savedInstanceState);
-        applyBlur(mBgWhite,rlCommentSend);
+        applyBlur(mBgWhite, rlCommentSend);
     }
     private  void initBaseView(){
         title.setText("Kong");
@@ -107,8 +108,14 @@ public class VideoActivity extends VideoBaseActivity{
             Log.e("GiraffePlayer", "loadLibraries error", e);
         }
         mVideoView.setRender(IjkVideoView.RENDER_SURFACE_VIEW);
-        if (currentPath != null)
+        if (currentPath != null) {
             mVideoView.setVideoPath(currentPath);
+            mVideoPaths = new String[4];
+            mVideoPaths[0] = currentPath;
+            mVideoPaths[1] = VideoPath.tt1_video1;
+            mVideoPaths[2] = VideoPath.tt1_video2;
+            mVideoPaths[3] = VideoPath.tt1_video3;
+        }
         else {
             Log.e(TAG, "Null Data Source\n");
             finish();
@@ -147,7 +154,7 @@ public class VideoActivity extends VideoBaseActivity{
             mDanmakuView.resume();
         }
         if(!mVideoView.isPlaying() && !mVideoView.isActivated()) {
-            Log.e(TAG,"~~resume start~~~~~~~");
+            Log.e(TAG, "~~resume start~~~~~~~");
             mVideoView.start();
         }
        Log.e(TAG, "~~~~~~~~~onresume~~" + mVideoView.isPlaying() + "," + mVideoView.isActivated() + "," + mVideoView.isBackgroundPlayEnabled() + ",");
@@ -324,15 +331,26 @@ public class VideoActivity extends VideoBaseActivity{
                 params.height =DensityUtils.dp2px(getApplicationContext(), mVideoHeight);
                 mDanmakuView.setLayoutParams(params);
             }
-            rlCommentSend.setVisibility(View.VISIBLE);
-
         }
+        changeElements();
     }
 
+    /**
+     * 横竖屏切换的时候，某些元素需要隐藏和现实
+     */
+    private void changeElements(){
+        if(isLandscape){
+            rlCommentSend.setVisibility(View.GONE);
+            mFloatButton.setVisibility(View.GONE);
+
+        }else {
+            rlCommentSend.setVisibility(View.VISIBLE);
+            mFloatButton.setVisibility(View.VISIBLE);
+        }
+    }
     private void showOrientationBar(){
         ivBack.setVisibility(View.VISIBLE);
         tvShare.setVisibility(View.VISIBLE);
-
     }
 
     /**
