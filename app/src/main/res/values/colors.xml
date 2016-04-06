@@ -6,7 +6,7 @@
     <color name="ijk_transparent_dark">#77000000</color>
     <color name="colorCityDay">#95777272</color>
 
-    <color name="colorFloatAction">#54d896</color>
+    <color name="colorFloatAction">#54d196</color>
     <color name="colorTitleFirst">#72788a</color>
     <color name="colorInfos">#888c98</color>
 
@@ -16,4 +16,5 @@
     <color name="colorContentComment">#bdbfc5</color>
     <color name="colorTimeComment">#cbcaca</color>
     <color name="color888c98">#888c98</color>
+    <color name="colorText_abb2c8">#abb2c8</color>
 </resources>

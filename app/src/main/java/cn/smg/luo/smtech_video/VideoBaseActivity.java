@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,9 +51,12 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     protected static final int MESSAGE_HIDE_LOCK_BOX = 3;
     protected static final int MESSAGE_FADE_OUT = 1;
     protected static final int TIME_HIDE_CENTER_BOX = 500;
-    protected static final int TIME_FADE_OUT = 7000;
+    protected static final int TIME_FADE_OUT = 10000;
     String currentPath;
     String[] mVideoPaths;
+    //top bar分割线
+    @Bind(R.id.iv_div)View ivDiv;
+    @Bind(R.id.iv_div2)View ivDiv2;
     //全屏按钮
     @Bind(R.id.full) ImageButton btnFull;
     //顶部标题
@@ -66,10 +70,15 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
 
     @Bind(R.id.tv_angle) TextView tvAngle;
     @Bind(R.id.tv_ratio) TextView tvRatio;
-    @Bind(R.id.tv_setting)TextView tvSetting;
-
+    @Bind(R.id.tv_setting)ImageButton tvSetting;
+    /**
+     * 顶部bar
+     */
     @Bind(R.id.toolbar) RelativeLayout rlVideoTop;
-    @Bind(R.id.tv_lock) TextView tvLock;
+    //锁屏按钮
+    @Bind(R.id.btn_lock_left)ImageButton btnLockLeft;
+    @Bind(R.id.btn_lock_right)ImageButton btnLockRight;
+    @Bind(R.id.tv_lock) ImageButton tvLock;
     @Bind(R.id.rl_video)RelativeLayout rlVideo;
     //播放器View
     @Bind(R.id.video_view)IjkVideoView mVideoView;
@@ -80,11 +89,11 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     @Bind(R.id.sv_danmaku)
     DanmakuView mDanmakuView;
     //底部播控按钮
-    @Bind(R.id.btn_play) TextView btnPlay;
+    @Bind(R.id.btn_play) ImageButton btnPlay;
     @Bind(R.id.tvWatchers)TextView tvWatchers;
-    @Bind(R.id.tv_send_switch)TextView btnSendSwitch;
-    @Bind(R.id.tv_send)TextView btnSendDamu;
-    @Bind(R.id.tv_full_screen)TextView btnScreen;
+    @Bind(R.id.tv_send_switch)ImageButton btnSendSwitch;
+    @Bind(R.id.tv_send)ImageButton btnSendDamu;
+    @Bind(R.id.tv_vertical_screen)ImageButton btnScreen;
 
     protected Handler mHandler;
     protected boolean isLock;
@@ -98,7 +107,7 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     /**
      * 弹幕
      */
-    protected DanmakuContext mContext;
+    protected DanmakuContext mDanmakuContext;
     protected BaseDanmakuParser mParser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,11 +195,11 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE) {//横屏
-            Log.e(TAG,"~~~~~~ORIENTATION_LANDSCAPE~~~~~~~~");
             if(!isLandscape) {
+                Log.e(TAG,rlVideoTop.getAlpha()+">>"+rlVideoTop.getTranslationY());
+                ViewCompat.animate(rlVideoTop).alpha(1).translationY(0).setDuration(100).start();
                 isLandscape = true;
                 showPlayMenu(true);
-                tvLock.setVisibility(View.VISIBLE);
                 mHandler.sendEmptyMessageDelayed(MESSAGE_FADE_OUT, TIME_FADE_OUT);
             }
         }else{
@@ -198,7 +207,9 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
             showPlayMenu(false);
             hideNavigation(false);
             hideSystemBar(false);
-            tvLock.setVisibility(View.GONE);
+
+            btnLockLeft.setVisibility(View.GONE);
+            btnLockRight.setVisibility(View.GONE);
         }
         preparedDanMu();
 //        showVideoBottom(isLandscape);
@@ -216,7 +227,8 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
             tvAngle.setVisibility(View.VISIBLE);
             tvRatio.setVisibility(View.VISIBLE);
             tvSetting.setVisibility(View.VISIBLE);
-
+            ivDiv.setVisibility(View.VISIBLE);
+            ivDiv2.setVisibility(View.VISIBLE);
             //底部
             rgAngle.setVisibility(View.GONE);
             rlVideoBottom.setVisibility(View.VISIBLE);
@@ -231,6 +243,8 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
             tvAngle.setVisibility(View.GONE);
             tvSetting.setVisibility(View.GONE);
             tvRatio.setVisibility(View.GONE);
+            ivDiv.setVisibility(View.GONE);
+            ivDiv2.setVisibility(View.GONE);
 
             rgAngle.setVisibility(View.VISIBLE);
             rlVideoBottom.setVisibility(View.GONE);
@@ -241,17 +255,6 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
         }
     }
 
-//    /**
-//     * 是否显示底部控制事件
-//     * @param show
-//     */
-//    protected void showVideoBottom(boolean show){
-//        if(show){
-//            rlVideoBottom.setVisibility(View.VISIBLE);
-//        }else{
-//            rlVideoBottom.setVisibility(View.GONE);
-//        }
-//    }
 //
 
     @Override
@@ -259,14 +262,14 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
         switch (msg.what){
             case MESSAGE_FADE_OUT:
                 showVideoMenu(false);
-                tvLock.setVisibility(View.GONE);
                 break;
             case MESSAGE_HIDE_CENTER_BOX:
                 llBrightnessBox.setVisibility(View.GONE);
                 llVolumeBox.setVisibility(View.GONE);
                 break;
             case MESSAGE_HIDE_LOCK_BOX:
-                tvLock.setVisibility(View.GONE);
+                btnLockLeft.setVisibility(View.GONE);
+                btnLockRight.setVisibility(View.GONE);
                 break;
         }
         return false;
@@ -277,21 +280,33 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     void clickSend(){
         Toast.makeText(getApplicationContext(),"tv_send",Toast.LENGTH_SHORT).show();
     }
-    @OnClick(R.id.tv_lock)
+
+    /**
+     * 点击锁屏按钮
+     */
+    @OnClick({R.id.tv_lock,R.id.btn_lock_right,R.id.btn_lock_left})
     void clickLockScreen(){
-        Toast.makeText(getApplicationContext(),"~~~~~lockScreen~~~~~",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),"~~~~~lockScreen~~~~~",Toast.LENGTH_SHORT).show();
         isLock = !isLock;
         if(isLock){
             showVideoMenu(false);
-//            this.getWindow().setType(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            tvLock.setBackgroundResource(R.mipmap.tv_locked);
+            btnLockLeft.setBackgroundResource(R.mipmap.tv_locked);
+            btnLockRight.setBackgroundResource(R.mipmap.tv_locked);
         }else{
             showVideoMenu(true);
-//            this.getWindow().setType(WindowManager.LayoutParams.);
+            tvLock.setBackgroundResource(R.mipmap.tv_lock);
+            btnLockLeft.setBackgroundResource(R.mipmap.tv_lock);
+            btnLockRight.setBackgroundResource(R.mipmap.tv_lock);
         }
+        showLockScreen(isLock);
+    }
+
+    private void showLockScreen(boolean isLock){
 
     }
 
-    @OnClick({R.id.tv_full_screen,R.id.full})
+    @OnClick({R.id.tv_vertical_screen,R.id.full})
     void ClickChangeVideoScreen(){
         changeScreen();
     }
@@ -323,7 +338,7 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
      */
     void preparedDanMu(){
         if (mDanmakuView != null && !mDanmakuView.isPrepared()){
-            mDanmakuView.prepare(mParser, mContext);
+            mDanmakuView.prepare(mParser, mDanmakuContext);
             return;
         }
         if(isLandscape && mDanmakuView!= null && mDanmakuView.isPrepared()){
@@ -344,12 +359,15 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
         if(show){//显示播控信息
 //            rlVideoTop.setTranslationY(-rlVideoTop.getHeight());
             ViewCompat.animate(rlVideoTop).alpha(1).translationY(0).setDuration(500).start();
-           showVideoBottom(show);
+            showVideoBottom(show);
             mHandler.sendEmptyMessageDelayed(MESSAGE_FADE_OUT, TIME_FADE_OUT);
             hideSystemBar(false);
             hideNavigation(false);
             //显示锁定按钮
-
+            if(btnLockLeft.getVisibility() == View.VISIBLE) {
+                btnLockLeft.setVisibility(View.GONE);
+                btnLockRight.setVisibility(View.GONE);
+            }
         }else{
             ViewCompat.animate(rlVideoTop).alpha(0).translationY(-rlVideoTop.getHeight()).setDuration(500).start();
             showVideoBottom(show);
@@ -373,7 +391,7 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
             }
         }else{
             if(isLandscape){
-                ViewCompat.animate(rlVideoBottom).alpha(0).setDuration(500).start();
+                    ViewCompat.animate(rlVideoBottom).alpha(0).setDuration(500).start();
             }else{
                 ViewCompat.animate(rgAngle).alpha(0).setDuration(500).start();
             }
@@ -388,11 +406,13 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
             return;
         }
         mHandler.removeMessages(MESSAGE_HIDE_LOCK_BOX);
-        if(tvLock.getVisibility() == View.GONE){
-            tvLock.setVisibility(View.VISIBLE);
+        if(btnLockLeft.getVisibility() == View.GONE){
+            btnLockLeft.setVisibility(View.VISIBLE);
+            btnLockRight.setVisibility(View.VISIBLE);
             mHandler.sendEmptyMessageDelayed(MESSAGE_HIDE_LOCK_BOX, TIME_FADE_OUT);
         }else{
-            tvLock.setVisibility(View.GONE);
+            btnLockLeft.setVisibility(View.GONE);
+            btnLockRight.setVisibility(View.GONE);
         }
     }
 
@@ -437,7 +457,7 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
                 }else if(rlVideoTop.getAlpha() == 0){
                     showVideoMenu(true);
                 }
-                viLockView();
+//                viLockView();
 //            }
             return super.onSingleTapUp(e);
         }
@@ -557,15 +577,5 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
 
     }
 
-    @OnClick({R.id.radio1,R.id.radio2,R.id.radio3,R.id.radio4})
-    void changeVideo(View view){
-        switch (view.getId()){
-            case R.id.radio1:
-                if(!currentPath.equals(mVideoPaths[0])){
-                    mVideoView.setVideoPath(mVideoPaths[0]);
-                    currentPath = mVideoPaths[0];
-                }
-                break;
-        }
-    }
+
 }

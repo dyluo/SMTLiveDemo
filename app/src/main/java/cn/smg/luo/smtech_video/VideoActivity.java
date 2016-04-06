@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -47,6 +48,7 @@ import master.flame.danmaku.danmaku.loader.IllegalDataException;
 import master.flame.danmaku.danmaku.loader.android.DanmakuLoaderFactory;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
 import master.flame.danmaku.danmaku.model.DanmakuTimer;
+import master.flame.danmaku.danmaku.model.IDanmakuIterator;
 import master.flame.danmaku.danmaku.model.IDanmakus;
 import master.flame.danmaku.danmaku.model.IDisplayer;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
@@ -129,7 +131,7 @@ public class VideoActivity extends VideoBaseActivity{
             @Override
             public void onPrepared(IMediaPlayer mp) {
                 startPlayTimes = SystemClock.currentThreadTimeMillis();
-//                Log.e(TAG,"~~~~~~~3~~~~~~~~"+mp.getVideoHeight()+">>"+mVideoView.getHeight());
+                Log.e(TAG, "~~~~~~~mVideoView.setOnPreparedListener~~~~~~~~");
                 if (mDanmakuView != null) {
                     ViewGroup.LayoutParams params = mDanmakuView.getLayoutParams();
                     params.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -160,6 +162,10 @@ public class VideoActivity extends VideoBaseActivity{
        Log.e(TAG, "~~~~~~~~~onresume~~" + mVideoView.isPlaying() + "," + mVideoView.isActivated() + "," + mVideoView.isBackgroundPlayEnabled() + ",");
 
     }
+
+    /**
+     * 初始化弹幕
+     */
     private void initDamu(){
 //        Log.e(TAG,"~~~~~~~~~~~~~~~"+mVideoView.getMeasuredHeight());
         // 设置最大显示行数
@@ -170,8 +176,8 @@ public class VideoActivity extends VideoBaseActivity{
         overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, true);
         overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
 
-        mContext = DanmakuContext.create();
-        mContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false)
+        mDanmakuContext = DanmakuContext.create();
+        mDanmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false)
                 .setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f)
 //                .setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
 //        .setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
@@ -218,9 +224,38 @@ public class VideoActivity extends VideoBaseActivity{
             mDanmakuView.enableDanmakuDrawingCache(true);
 
         }
+//        getDanMuList();
 
     }
 
+    /**
+     * 获取弹幕数据列表
+     */
+    public ArrayList<BaseDanmaku> getDanmuList(){
+        ArrayList<BaseDanmaku> list = new ArrayList<>();
+        if(mParser!=null){
+            mParser.setConfig(mDanmakuContext);
+            IDanmakus iDanmakus = mParser.getDanmakus();
+            IDanmakuIterator it = iDanmakus.iterator();
+            int i= 0;
+            while(it.hasNext()){
+                if(i==4){
+                    break;
+                }
+                BaseDanmaku baseDanmaku = it.next();
+                list.add(baseDanmaku);
+                Log.e(TAG,baseDanmaku.text.toString());
+                i++;
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 弹幕列表解析
+     * @param stream
+     * @return
+     */
     private BaseDanmakuParser createParser(InputStream stream) {
 
         if (stream == null) {
@@ -259,7 +294,7 @@ public class VideoActivity extends VideoBaseActivity{
      */
     private void addDanmaku(boolean islive, String text) {
         Log.e(TAG,"~~~~~~video currentposition~~~~"+mVideoView.getCurrentPosition());
-        BaseDanmaku danmaku = mContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
+        BaseDanmaku danmaku = mDanmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
         if (danmaku == null || mDanmakuView == null) {
             return;
         }
@@ -413,34 +448,7 @@ public class VideoActivity extends VideoBaseActivity{
         });
     }
 
-    //    @OnClick({R.id.path1, R.id.path2,R.id.path3})
-//    void clickPlay(View view){
-//        mDrawerLayout.closeDrawers();
-//        boolean ischange = true;
-//        switch (view.getId()){
-//            case R.id.path1:
-//                if(currentPath.equals(MainActivity.testRtmpPath1)){
-//                    ischange = false;
-//                }
-//               currentPath = MainActivity.testRtmpPath1;
-//                break;
-//            case R.id.path2:
-//                if(currentPath.equals(MainActivity.testRtmpPath2)){
-//                    ischange = false;
-//                }
-//               currentPath = MainActivity.testRtmpPath2;
-//                break;
-//            case R.id.path3:
-//                if(currentPath.equals(MainActivity.testRtmpPath3)){
-//                   ischange = false;
-//                }
-//                currentPath = MainActivity.testRtmpPath3;
-//                break;
-//        }
-//        if(ischange) {
-//            mVideoView.setVideoPath(currentPath);
-//        }
-//    }
+
     @OnClick(R.id.tv_share)
     void share(){
         Toast.makeText(getApplicationContext(), "share", Toast.LENGTH_SHORT).show();
@@ -460,6 +468,37 @@ public class VideoActivity extends VideoBaseActivity{
         }else{
             ratioPopView.showAsDropDown(tvRatio);
             mHandler.removeMessages(MESSAGE_FADE_OUT);
+        }
+    }
+    /**
+     * 栏目切换
+     * @param view
+     */
+    @OnClick({R.id.radio1,R.id.radio2,R.id.radio3,R.id.radio4})
+    void changeVideoClick(View view){
+        switch (view.getId()){
+            case R.id.radio1:
+                changeVideoAngle(mVideoPaths[0]);
+                break;
+            case R.id.radio2:
+                changeVideoAngle(mVideoPaths[1]);
+                break;
+            case R.id.radio3:
+                changeVideoAngle(mVideoPaths[2]);
+                break;
+            case R.id.radio4:
+                changeVideoAngle(mVideoPaths[3]);
+                break;
+        }
+    }
+
+    private void changeVideoAngle(String targetVideo) {
+        if(!currentPath.equals(targetVideo)){
+            mProgressBar.setVisibility(View.VISIBLE);
+            mVideoView.pause();
+            mVideoView.setVideoPath(targetVideo);
+            currentPath = targetVideo;
+            mVideoView.start();
         }
     }
 

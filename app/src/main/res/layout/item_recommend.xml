@@ -10,7 +10,7 @@
         android:text="@string/title_recommend"
         android:textColor="@color/color888c98"
         android:textSize="@dimen/txt_size16"
-        android:layout_marginBottom="9dp"/>
+        android:layout_marginBottom="5dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_recommend"

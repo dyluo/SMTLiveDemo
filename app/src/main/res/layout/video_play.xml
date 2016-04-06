@@ -24,16 +24,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"/>
-        <TextView
-            android:id="@+id/tv_lock"
+        <!--左锁屏按钮 -->
+        <ImageButton
+            android:id="@+id/btn_lock_left"
+            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="锁定"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:layout_centerVertical="true"
+            android:background="@mipmap/tv_lock"
+            android:layout_marginLeft="@dimen/padding15"
             android:visibility="gone"/>
-
+        <!--右锁屏按钮 -->
+        <ImageButton
+            android:id="@+id/btn_lock_right"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/tv_lock"
+            android:layout_marginRight="@dimen/padding15"
+            android:visibility="gone"/>
         <!--声音 -->
         <LinearLayout
             android:id="@+id/app_video_volume_box"

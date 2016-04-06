@@ -36,12 +36,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="13sp"
-            android:text="上来看地方上岛咖啡上岛咖啡"
-            android:lineSpacingExtra="3dp"
+            android:text="上来看地方上岛咖啡上岛咖啡使得开发商了打"
+            android:lineSpacingExtra="1dp"
+            android:textScaleX="1.1"
             android:textColor="@color/colorInfos"
-            android:layout_marginLeft="11dp"
-            android:layout_marginRight="11dp"
-            android:paddingTop="9dp" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:paddingTop="7dp" />
 
     </LinearLayout>
 

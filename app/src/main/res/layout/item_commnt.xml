@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="13dp">
                 <TextView
                     android:id="@+id/txt_username"
                     android:layout_width="wrap_content"
@@ -42,18 +42,18 @@
                     android:layout_height="wrap_content"
                     android:text="11:23"
                     android:textColor="@color/colorTimeComment"
-                    android:textSize="@dimen/txt_size12"/>
+                    android:textSize="@dimen/txt_size11"/>
             </LinearLayout>
 
 
             <TextView
                 android:id="@+id/txt_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="9dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="我很少了快递费斯柯达"
                 android:textColor="@color/colorContentComment"
-                android:textSize="@dimen/txt_size12"/>
+                android:textSize="@dimen/txt_size13"/>
 
         </LinearLayout>
     </RelativeLayout>

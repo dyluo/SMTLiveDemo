@@ -19,10 +19,13 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.OnClick;
 import cn.smg.luo.smtech_video.R;
+import cn.smg.luo.smtech_video.VideoActivity;
 import cn.smg.luo.smtech_video.adapter.RecommendRecyclerViewAdapter;
 import cn.smg.luo.smtech_video.adapter.SpacesItemDecoration;
 import cn.smg.luo.smtech_video.common.GlideCircleTransform;
+import cn.smg.luo.smtech_video.common.TimeUtils;
 import cn.smg.luo.smtech_video.model.Program;
+import master.flame.danmaku.danmaku.model.BaseDanmaku;
 
 /**
  * @author jl_luo
@@ -63,7 +66,7 @@ public class VideoInfoFragment extends BaseFragment{
 
     @Override
     protected void onUserVisible() {
-        Log.e(TAG,"~~~~~~~onUserVisible~~~~~~");
+//        Log.e(TAG,"~~~~~~~onUserVisible~~~~~~");
         llComments = build(llComments);
         llComments = addCommentMore(llComments);
         initRecommend();
@@ -75,8 +78,10 @@ public class VideoInfoFragment extends BaseFragment{
      * @return
      */
     private LinearLayout build(LinearLayout container){
-
-        for(int i=0;i<COMMENTSIZE;i++){
+        VideoActivity parent = (VideoActivity) getActivity();
+        ArrayList<BaseDanmaku> list = parent.getDanmuList();
+        int size = list.size();
+        for(int i=0;i<size;i++){
             View itemCommentView = LayoutInflater.from(context).inflate(R.layout.item_commnt,null);
             ImageView head = (ImageView) itemCommentView.findViewById(R.id.ic_head);
             Glide.with(context).load(R.mipmap.ic12)
@@ -85,8 +90,9 @@ public class VideoInfoFragment extends BaseFragment{
                     .transform(new GlideCircleTransform(context))
                     .into(head);
             TextView userName = (TextView)itemCommentView.findViewById(R.id.txt_username);
-            userName.setText(userName.getText()+""+i);
-
+            userName.setText(userName.getText() + "" + i);
+            ((TextView)itemCommentView.findViewById(R.id.txt_content)).setText(list.get(i).text);
+            ((TextView)itemCommentView.findViewById(R.id.txt_time)).setText(TimeUtils.getTime(list.get(i).time,TimeUtils.DEFAULT_DATE_FORMAT));
             container.addView(itemCommentView);
         }
 
@@ -139,7 +145,7 @@ public class VideoInfoFragment extends BaseFragment{
      */
     @OnClick(R.id.ic_comment_toggle)
     void commentToggleClick(){
-        llComments.setVisibility((llComments.getVisibility()==View.VISIBLE)?View.GONE:View.VISIBLE);
+        llComments.setVisibility((llComments.getVisibility() == View.VISIBLE) ? View.GONE : View.VISIBLE);
         icCommentToggle.setImageResource(llComments.getVisibility() == View.VISIBLE ? R.mipmap.ic_togg_close: R.mipmap.ic_togg_open);
 
     }

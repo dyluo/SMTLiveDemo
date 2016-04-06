@@ -5,58 +5,60 @@
     android:background="@mipmap/bg_video_bottom"
     android:id="@+id/rl_video_bottom">
 
-    <TextView
+    <ImageButton
+        android:layout_marginLeft="@dimen/padding20"
         android:id="@+id/btn_play"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="播放/停住"
-        android:textSize="@dimen/txt_size16"
-        android:textColor="@android:color/white"/>
+        android:background="@mipmap/btn_full_pause"/>
 
     <TextView
-        android:layout_marginLeft="@dimen/padding15"
+        android:layout_marginLeft="@dimen/padding19"
         android:layout_toRightOf="@+id/btn_play"
         android:id="@+id/tvWatchers"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="123人观看"
-        android:textSize="@dimen/txt_size14"
-        android:textColor="@android:color/white"/>
+        android:text="123人正在观看"
+        android:textSize="@dimen/txt_size12"
+        android:textColor="@color/colorFloatAction"/>
 
 
-    <TextView
+    <ImageButton
         android:id="@+id/tv_send_switch"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/tv_send"
-        android:paddingRight="@dimen/padding15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="弹幕开"
-        android:textSize="@dimen/txt_size16"
-        android:textColor="@android:color/white"/>
-
-    <TextView
+        android:background="@drawable/btn_danmu_selector"
+        android:layout_marginRight="@dimen/padding33"/>
+    <!--发送弹幕 -->
+    <ImageButton
         android:id="@+id/tv_send"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/tv_full_screen"
-        android:paddingRight="@dimen/padding15"
+        android:layout_toLeftOf="@+id/tv_lock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="发弹幕"
-        android:textSize="@dimen/txt_size16"
-        android:textColor="@android:color/white"/>
-
-
-    <TextView
-        android:id="@+id/tv_full_screen"
+        android:background="@drawable/btn_send_selector"
+        android:layout_marginRight="@dimen/padding33"/>
+    <!--锁定-->
+    <ImageButton
+        android:id="@+id/tv_lock"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/tv_vertical_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/tv_lock"
+        android:layout_marginRight="@dimen/padding32"/>
+    <!-- 竖屏-->
+    <ImageButton
+        android:id="@+id/tv_vertical_screen"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:paddingRight="@dimen/padding15"
+        android:layout_marginRight="@dimen/padding20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="全屏"
-        android:textSize="@dimen/txt_size16"
-        android:textColor="@android:color/white"/>
+        android:background="@drawable/btn_vertical_selector"
+         />
 </RelativeLayout>
