@@ -24,14 +24,13 @@
         <include layout="@layout/video_top"/>
         <include layout="@layout/item_comment_send"/>
     </FrameLayout>
-    <android.support.design.widget.FloatingActionButton
+
+    <ImageButton
         android:id="@+id/float_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/btn_play_f"
-        app:backgroundTint="@color/colorFloatAction"
-        app:backgroundTintMode="multiply"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="@mipmap/btn_play_float"
         app:layout_anchor="@+id/rl_video"
         app:layout_anchorGravity="bottom|end|right"
-        android:layout_margin="@dimen/padding15"/>
+        android:layout_margin="@dimen/padding29"/>
 </android.support.design.widget.CoordinatorLayout>

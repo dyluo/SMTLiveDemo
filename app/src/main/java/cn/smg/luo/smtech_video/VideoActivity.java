@@ -6,23 +6,15 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,6 +33,7 @@ import cn.smg.luo.smtech_video.view.VideoInfoFragment;
 import cn.smg.luo.smtech_video.widget.media.AndroidMediaController;
 import cn.smg.luo.smtech_video.widget.media.IMediaController;
 import cn.smg.luo.smtech_video.widget.media.IjkVideoView;
+import cn.smg.luo.smtech_video.widget.menus.AnglePopView;
 import cn.smg.luo.smtech_video.widget.menus.RatioPopView;
 import master.flame.danmaku.controller.IDanmakuView;
 import master.flame.danmaku.danmaku.loader.ILoader;
@@ -77,17 +70,16 @@ public class VideoActivity extends VideoBaseActivity{
     private boolean mBackPressed;
 //    @Bind(R.id.btn_send) Button btnSend;
 //    @Bind(R.id.et_msg) EditText editMsg;
-    private Context context;
+//    private Context context;
     @Bind(R.id.rl_comment_send)RelativeLayout rlCommentSend;
     @Bind(R.id.bg_white) ImageView mBgWhite;
     private static final int mVideoHeight = 254;
-    @Bind(R.id.float_play)FloatingActionButton mFloatButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         setContentView(R.layout.activity_player);
-        context = getApplicationContext();
+        resetTopBarMargin();
         currentPath = getIntent().getStringExtra("videopath");
         if (initIjkVideo()) return;
         initBaseView();
@@ -130,6 +122,11 @@ public class VideoActivity extends VideoBaseActivity{
         mVideoView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(IMediaPlayer mp) {
+                mProgressBar.setVisibility(View.GONE);
+                mHandler.sendEmptyMessageDelayed(MESSAGE_FADE_OUT, TIME_FADE_OUT);
+                if (isLandscape) {
+                    return;
+                }
                 startPlayTimes = SystemClock.currentThreadTimeMillis();
                 Log.e(TAG, "~~~~~~~mVideoView.setOnPreparedListener~~~~~~~~");
                 if (mDanmakuView != null) {
@@ -139,10 +136,8 @@ public class VideoActivity extends VideoBaseActivity{
                     mDanmakuView.setLayoutParams(params);
                 }
                 showPlayMenu(false);
-                mProgressBar.setVisibility(View.GONE);
                 //开始弹幕
 //                mDanmakuView.prepare(mParser, mContext);
-                mHandler.sendEmptyMessageDelayed(MESSAGE_FADE_OUT, TIME_FADE_OUT);
             }
         });
         return false;
@@ -376,11 +371,11 @@ public class VideoActivity extends VideoBaseActivity{
     private void changeElements(){
         if(isLandscape){
             rlCommentSend.setVisibility(View.GONE);
-            mFloatButton.setVisibility(View.GONE);
+            mFloatPlay.setVisibility(View.GONE);
 
         }else {
             rlCommentSend.setVisibility(View.VISIBLE);
-            mFloatButton.setVisibility(View.VISIBLE);
+            mFloatPlay.setVisibility(View.VISIBLE);
         }
     }
     private void showOrientationBar(){
@@ -448,7 +443,9 @@ public class VideoActivity extends VideoBaseActivity{
         });
     }
 
-
+    /**
+     * 分享
+     */
     @OnClick(R.id.tv_share)
     void share(){
         Toast.makeText(getApplicationContext(), "share", Toast.LENGTH_SHORT).show();
@@ -457,11 +454,45 @@ public class VideoActivity extends VideoBaseActivity{
     void backPage(){
         onBackPressed();
     }
+
+    /**
+     * 视角点击显示菜单
+     */
     RatioPopView ratioPopView ;
+    AnglePopView anglePopView;
+    @OnClick(R.id.tv_angle)
+    void clickShowAngleView(){
+        if(anglePopView == null) {
+            anglePopView = new AnglePopView(mContext);
+            anglePopView.setVideoAngleChangeListener(new AnglePopView.VideoAngleChangeListener() {
+                @Override
+                public void change(int num) {
+                    changeVideoAngle(mVideoPaths[num]);
+                    anglePopView.dismiss();
+                }
+            });
+        }
+        if(anglePopView.isShowing()){
+            anglePopView.dismiss();
+        }else{
+            anglePopView.showAsDropDown(tvAngle);
+            mHandler.removeMessages(MESSAGE_FADE_OUT);
+        }
+    }
+
+    /**
+     * 画质
+     */
     @OnClick(R.id.tv_ratio)
     void clickShowRatioView(){
         if(ratioPopView == null) {
-            ratioPopView = new RatioPopView(context);
+            ratioPopView = new RatioPopView(mContext);
+            ratioPopView.setVideoAngleChangeListener(new AnglePopView.VideoAngleChangeListener() {
+                @Override
+                public void change(int num) {
+                    ratioPopView.dismiss();
+                }
+            });
         }
         if(ratioPopView.isShowing()){
             ratioPopView.dismiss();
@@ -492,6 +523,10 @@ public class VideoActivity extends VideoBaseActivity{
         }
     }
 
+    /**
+     * 视角切换
+     * @param targetVideo
+     */
     private void changeVideoAngle(String targetVideo) {
         if(!currentPath.equals(targetVideo)){
             mProgressBar.setVisibility(View.VISIBLE);

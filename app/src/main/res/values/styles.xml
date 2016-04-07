@@ -41,4 +41,14 @@
         <item name="android:textSize">@dimen/txt_size12</item>
 
     </style>
+    <style name="CusPopWindowRadioStyle" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/pop_bg_selector</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@drawable/pop_text_color_selector</item>
+        <item name="android:textSize">@dimen/txt_size12</item>
+
+    </style>
 </resources>

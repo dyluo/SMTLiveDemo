@@ -12,25 +12,24 @@
         android:orientation="vertical">
         <RadioButton
             android:id="@+id/radio1"
-            android:text="超清"
+            android:text="视角1"
             style="@style/CusPopWindowRadioStyle"
+            android:checked="true"
             android:layout_marginBottom="0.5dp"/>
         <RadioButton
             style="@style/CusPopWindowRadioStyle"
             android:id="@+id/radio2"
-            android:text="高清"
+            android:text="视角2"
             android:layout_marginBottom="0.5dp"/>
         <RadioButton
             style="@style/CusPopWindowRadioStyle"
             android:id="@+id/radio3"
-            android:text="流畅"
-            android:layout_marginBottom="0.5dp"
-            android:checked="true"/>
+            android:text="视角3"
+            android:layout_marginBottom="0.5dp"/>
         <RadioButton
             style="@style/CusPopWindowRadioStyle"
             android:id="@+id/radio4"
-            android:text="视角4"
-            android:visibility="gone"/>
+            android:text="视角4" />
 
     </RadioGroup>
 
@@ -38,7 +37,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/height28"
         android:orientation="vertical"
-        android:layout_marginTop="57dp"
         android:id="@+id/ll_icon_tag"
         android:layout_marginBottom="0.5dp"
         android:gravity="center_vertical">

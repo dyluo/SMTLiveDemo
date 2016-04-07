@@ -13,13 +13,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,6 +32,8 @@ import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.smg.luo.smtech_video.common.DensityUtils;
+import cn.smg.luo.smtech_video.common.WindowUtils;
 import cn.smg.luo.smtech_video.widget.media.IjkVideoView;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
@@ -66,7 +68,7 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     //竖屏 视角控制按钮
     @Bind(R.id.rg_angle)RadioGroup rgAngle;
     //竖屏播放按钮
-    @Bind(R.id.float_play)FloatingActionButton mFloatPlay;
+    @Bind(R.id.float_play)ImageButton mFloatPlay;
 
     @Bind(R.id.tv_angle) TextView tvAngle;
     @Bind(R.id.tv_ratio) TextView tvRatio;
@@ -150,7 +152,11 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
         });
 
     }
-
+    protected void resetTopBarMargin(){
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT ){
+           rlVideoTop.setPadding(0, DensityUtils.dp2px(mContext,31)- WindowUtils.getStatusBarHeight(mContext),0,0);
+        }
+    }
 
     /**
      * 隐藏底部导航栏
@@ -315,10 +321,10 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     void clickPlay(){
         if(mVideoView!= null && mVideoView.canPause() && mVideoView.isPlaying()){
             mVideoView.pause();
-            mFloatPlay.setImageResource(R.mipmap.btn_pause_f);
+            mFloatPlay.setImageResource(R.mipmap.btn_pause_float);
         }else if(mVideoView!=null && !mVideoView.isPlaying()){
             mVideoView.start();
-            mFloatPlay.setImageResource(R.mipmap.btn_play_f);
+            mFloatPlay.setImageResource(R.mipmap.btn_play_float);
         }
     }
     @OnClick(R.id.tv_send_switch)

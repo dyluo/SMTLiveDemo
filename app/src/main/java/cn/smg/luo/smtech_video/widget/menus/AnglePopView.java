@@ -2,20 +2,16 @@ package cn.smg.luo.smtech_video.widget.menus;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import cn.smg.luo.smtech_video.R;
@@ -29,13 +25,13 @@ import cn.smg.luo.smtech_video.common.DensityUtils;
  * @date 2016/3/24 17:18
  */
 
-public class RatioPopView extends PopupWindow implements RadioGroup.OnCheckedChangeListener{
+public class AnglePopView extends PopupWindow implements RadioGroup.OnCheckedChangeListener{
     Context context;
     private View contentView;
     ColorDrawable tempDrawable;
     private LinearLayout iconTag;
 
-    public RatioPopView(Context context){
+    public AnglePopView(Context context){
         this.context = context;
         Drawable d = ContextCompat.getDrawable(context, R.mipmap.ic_menu_arrow);
         tempDrawable = new ColorDrawable(0x00000000);
@@ -45,7 +41,7 @@ public class RatioPopView extends PopupWindow implements RadioGroup.OnCheckedCha
 
     private void init(){
         LayoutInflater inflater = LayoutInflater.from(context);
-        contentView = inflater.inflate(R.layout.pop_ratio,null);
+        contentView = inflater.inflate(R.layout.pop_angle,null);
         Resources resources = context.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
         float density1 = dm.density;
@@ -81,7 +77,7 @@ public class RatioPopView extends PopupWindow implements RadioGroup.OnCheckedCha
 
 
     /**
-     * 点击事件
+     * 点击事件，切换图片位置，修改viedo播放视角
      * @param group
      * @param checkedId
      */
@@ -111,14 +107,19 @@ public class RatioPopView extends PopupWindow implements RadioGroup.OnCheckedCha
                 layoutParams = (FrameLayout.LayoutParams) iconTag.getLayoutParams();
                 layoutParams.setMargins(0,DensityUtils.dp2px(context,28*3+1.5f),0,0);
                 iconTag.setLayoutParams(layoutParams);
+                videoAngleChangeListener.change(3);
                 break;
             default:
                 break;
         }
     }
 
-    private AnglePopView.VideoAngleChangeListener videoAngleChangeListener;
-    public void setVideoAngleChangeListener(AnglePopView.VideoAngleChangeListener videoAngleChangeListener){
+    public interface VideoAngleChangeListener{
+        public void change(int num);
+    }
+
+    private VideoAngleChangeListener videoAngleChangeListener;
+    public void setVideoAngleChangeListener(VideoAngleChangeListener videoAngleChangeListener){
         this.videoAngleChangeListener = videoAngleChangeListener;
     }
 

@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="57dp"
+    android:layout_height="62dp"
     android:background="@mipmap/bg_video_top"
     android:id="@+id/toolbar"
     android:paddingLeft="@dimen/padding15"
     android:paddingRight="@dimen/padding15"
     android:paddingTop="31dp" >
-    <ImageButton
-        android:id="@+id/iv_arrow_left"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_back_selector"/>
+        android:gravity="center_vertical">
+        <ImageButton
+            android:id="@+id/iv_arrow_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_back_selector"/>
 
-    <View
-        android:layout_marginLeft="7dp"
-        android:id="@+id/iv_div"
-        android:layout_width="0.5dp"
-        android:layout_height="20dp"
-        android:background="@color/colorText_abb2c8"
-        android:layout_toRightOf="@+id/iv_arrow_left"/>
+        <View
+            android:layout_marginLeft="7dp"
+            android:id="@+id/iv_div"
+            android:layout_width="0.5dp"
+            android:layout_height="15dp"
+            android:background="@color/colorText_abb2c8" />
 
-    <TextView
-        android:layout_marginLeft="8dp"
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/txt_size18"
-        android:layout_toRightOf="@+id/iv_div"/>
-
+        <TextView
+            android:layout_marginLeft="8dp"
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/txt_size15"
+            android:text="我们"/>
+    </LinearLayout>
     <LinearLayout
         android:gravity="bottom"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true">
         <TextView
             android:id="@+id/tv_angle"
@@ -41,16 +44,20 @@
             android:layout_height="wrap_content"
             android:text="视角"
             android:textColor="@color/colorText_abb2c8"
-            android:textSize="@dimen/txt_size15"
+            android:textSize="@dimen/txt_size12"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:paddingRight="4dp"
             android:drawableRight="@mipmap/ic_pull_down"
-            android:drawablePadding="4dp"/>
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"/>
         <View
             android:id="@+id/iv_div2"
             android:layout_width="0.5dp"
-            android:layout_height="20dp"
-            android:background="@color/colorText_abb2c8"/>
+            android:layout_height="12dp"
+            android:background="@color/colorText_abb2c8"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/tv_ratio"
@@ -58,11 +65,13 @@
             android:layout_height="wrap_content"
             android:text="画质"
             android:textColor="@color/colorText_abb2c8"
-            android:textSize="@dimen/txt_size15"
+            android:textSize="@dimen/txt_size12"
             android:paddingLeft="8dp"
             android:layout_marginRight="@dimen/padding27"
             android:drawableRight="@mipmap/ic_pull_down"
-            android:drawablePadding="4dp"/>
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"/>
 
         <ImageButton
             android:id="@+id/tv_setting"
