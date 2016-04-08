@@ -1,6 +1,6 @@
 package cn.smg.luo.smtech_video;
 
-import android.content.Context;
+
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -8,13 +8,13 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,8 +30,6 @@ import cn.smg.luo.smtech_video.common.DensityUtils;
 import cn.smg.luo.smtech_video.common.FastBlur;
 import cn.smg.luo.smtech_video.model.VideoPath;
 import cn.smg.luo.smtech_video.view.VideoInfoFragment;
-import cn.smg.luo.smtech_video.widget.media.AndroidMediaController;
-import cn.smg.luo.smtech_video.widget.media.IMediaController;
 import cn.smg.luo.smtech_video.widget.media.IjkVideoView;
 import cn.smg.luo.smtech_video.widget.menus.AnglePopView;
 import cn.smg.luo.smtech_video.widget.menus.RatioPopView;
@@ -40,6 +38,7 @@ import master.flame.danmaku.danmaku.loader.ILoader;
 import master.flame.danmaku.danmaku.loader.IllegalDataException;
 import master.flame.danmaku.danmaku.loader.android.DanmakuLoaderFactory;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
+import master.flame.danmaku.danmaku.model.Danmaku;
 import master.flame.danmaku.danmaku.model.DanmakuTimer;
 import master.flame.danmaku.danmaku.model.IDanmakuIterator;
 import master.flame.danmaku.danmaku.model.IDanmakus;
@@ -49,50 +48,46 @@ import master.flame.danmaku.danmaku.model.android.Danmakus;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import master.flame.danmaku.danmaku.parser.IDataSource;
 import master.flame.danmaku.danmaku.parser.android.BiliDanmukuParser;
-import master.flame.danmaku.ui.widget.DanmakuView;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
  * @author jl_luo
  * @name: cn.smg.luo.smtech_video
- * @description:
+ * @description: 播放详情页面
  * @date 2016/3/7 15:09
  */
 
 public class VideoActivity extends VideoBaseActivity{
     private static final String TAG = VideoActivity.class.getSimpleName();
 
-
-    @Bind(R.id.ll_info)
-    LinearLayout llInfo;
-    @Bind(R.id.fl_info)FrameLayout flInfo;
+    //详情页正文信息
+    @Bind(R.id.ll_info)LinearLayout llInfo;
     private boolean mBackPressed;
-//    @Bind(R.id.btn_send) Button btnSend;
-//    @Bind(R.id.et_msg) EditText editMsg;
-//    private Context context;
+    //底部点评
     @Bind(R.id.rl_comment_send)RelativeLayout rlCommentSend;
+    //模糊白色
     @Bind(R.id.bg_white) ImageView mBgWhite;
+    //video的默认高度
     private static final int mVideoHeight = 254;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         setContentView(R.layout.activity_player);
         resetTopBarMargin();
         currentPath = getIntent().getStringExtra("videopath");
-        if (initIjkVideo()) return;
         initBaseView();
         initDamu();
+        if (initIjkVideo()) return;
         initFragmentInfo(savedInstanceState);
         applyBlur(mBgWhite, rlCommentSend);
     }
     private  void initBaseView(){
-        title.setText("Kong");
+        title.setText("SHAV");
     }
     /**
      * 初始化VideoView
-     * @return
+     * @return true exit
      */
     private boolean initIjkVideo() {
         try {
@@ -115,32 +110,38 @@ public class VideoActivity extends VideoBaseActivity{
             finish();
             return true;
         }
-//        IMediaController mediaController = new AndroidMediaController(this, false);
-//        mediaController.setAnchorView(LayoutInflater.from(getApplicationContext()).inflate(R.layout.video_bottom,null));
-//        mVideoView.setMediaController(mediaController);
         mVideoView.toggleAspectRatio(0);
         mVideoView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(IMediaPlayer mp) {
+                Log.e(TAG,"~~~~~~~video prepared~~~~~~~~~");
                 mProgressBar.setVisibility(View.GONE);
                 mHandler.sendEmptyMessageDelayed(MESSAGE_FADE_OUT, TIME_FADE_OUT);
-                if (isLandscape) {
-                    return;
-                }
                 startPlayTimes = SystemClock.currentThreadTimeMillis();
-                Log.e(TAG, "~~~~~~~mVideoView.setOnPreparedListener~~~~~~~~");
                 if (mDanmakuView != null) {
                     ViewGroup.LayoutParams params = mDanmakuView.getLayoutParams();
                     params.width = ViewGroup.LayoutParams.MATCH_PARENT;
                     params.height = mVideoView.getHeight();
                     mDanmakuView.setLayoutParams(params);
                 }
+                if (isLandscape) {
+                    if(!mDanmakuView.isPrepared()){
+                        mDanmakuView.prepare(mParser, mDanmakuContext);
+                    }
+                    return;
+                }
                 showPlayMenu(false);
                 //开始弹幕
-//                mDanmakuView.prepare(mParser, mContext);
+//                mDanmakuView.prepare(mParser, mDanmakuContext);
             }
         });
         return false;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG,"~~~~~~onRestart~~~~~~~~~~~~");
     }
 
     @Override
@@ -150,12 +151,7 @@ public class VideoActivity extends VideoBaseActivity{
         if (mDanmakuView != null && mDanmakuView.isPrepared() && mDanmakuView.isPaused()) {
             mDanmakuView.resume();
         }
-        if(!mVideoView.isPlaying() && !mVideoView.isActivated()) {
-            Log.e(TAG, "~~resume start~~~~~~~");
-            mVideoView.start();
-        }
        Log.e(TAG, "~~~~~~~~~onresume~~" + mVideoView.isPlaying() + "," + mVideoView.isActivated() + "," + mVideoView.isBackgroundPlayEnabled() + ",");
-
     }
 
     /**
@@ -188,16 +184,17 @@ public class VideoActivity extends VideoBaseActivity{
 
                 @Override
                 public void drawingFinished() {
-                    Log.w(TAG, "drawingFinished(): ");
+//                    Log.w(TAG, "drawingFinished(): ");
                 }
 
                 @Override
                 public void danmakuShown(BaseDanmaku danmaku) {
-//                    Log.w(TAG, "danmakuShown(): text=" + danmaku.text + ",time= " + danmaku.time);
+                    Log.w(TAG, "danmakuShown(): text=" + danmaku.text + ",time= " + danmaku.time);
                 }
 
                 @Override
                 public void prepared() {
+                    Log.e(TAG,"~~~~~~~~~dan mu prepared~~~~~~~~~~~");
                     mDanmakuView.start();
                 }
             });
@@ -214,13 +211,10 @@ public class VideoActivity extends VideoBaseActivity{
                 }
             });
 
-
             mDanmakuView.showFPS(false);
             mDanmakuView.enableDanmakuDrawingCache(true);
-
         }
 //        getDanMuList();
-
     }
 
     /**
@@ -228,28 +222,39 @@ public class VideoActivity extends VideoBaseActivity{
      */
     public ArrayList<BaseDanmaku> getDanmuList(){
         ArrayList<BaseDanmaku> list = new ArrayList<>();
-        if(mParser!=null){
-            mParser.setConfig(mDanmakuContext);
-            IDanmakus iDanmakus = mParser.getDanmakus();
-            IDanmakuIterator it = iDanmakus.iterator();
-            int i= 0;
-            while(it.hasNext()){
-                if(i==4){
-                    break;
-                }
-                BaseDanmaku baseDanmaku = it.next();
-                list.add(baseDanmaku);
-                Log.e(TAG,baseDanmaku.text.toString());
-                i++;
-            }
-        }
+        BaseDanmaku baseDanmaku = new Danmaku("大宝大宝天天见");
+        baseDanmaku.time = 1422204613;
+        list.add(baseDanmaku);
+        baseDanmaku = new Danmaku("没猜到结局23333");
+        baseDanmaku.time = 1422204613;
+        list.add(baseDanmaku);
+        baseDanmaku = new Danmaku("笑得停不下来2333333333333333333333");
+        baseDanmaku.time = 1422204613;
+        list.add(baseDanmaku);
+        baseDanmaku = new Danmaku("刷歌词挡字母的 你药不能停");
+        baseDanmaku.time = 1422204613;
+        list.add(baseDanmaku);
+//        if(mParser!=null){
+//            mParser.setConfig(DanmakuContext.create());
+//            IDanmakus iDanmakus = mParser.getDanmakus();
+//            IDanmakuIterator it = iDanmakus.iterator();
+//            int i= 0;
+//            while(it.hasNext()){
+//                if(i==4){
+//                    break;
+//                }
+//                BaseDanmaku baseDanmaku = it.next();
+//                list.add(baseDanmaku);
+//                i++;
+//            }
+//        }
         return list;
     }
 
     /**
      * 弹幕列表解析
-     * @param stream
-     * @return
+     * @param stream 弹幕xml流
+     * @return BaseDanmakuParser class
      */
     private BaseDanmakuParser createParser(InputStream stream) {
 
@@ -285,16 +290,16 @@ public class VideoActivity extends VideoBaseActivity{
 
     /**
      * 添加文本弹幕
-     * @param islive
+     * @param islive 是否直播
+     * @param text 发送弹幕文本
      */
-    private void addDanmaku(boolean islive, String text) {
+    public void addDanmaku(boolean islive, String text) {
         Log.e(TAG,"~~~~~~video currentposition~~~~"+mVideoView.getCurrentPosition());
         BaseDanmaku danmaku = mDanmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
         if (danmaku == null || mDanmakuView == null) {
             return;
         }
-        // for(int i=0;i<100;i++){
-        // }
+
         if(TextUtils.isEmpty(text)){
             danmaku.text = "这是一条弹幕" + System.nanoTime();
         }else{
@@ -317,7 +322,7 @@ public class VideoActivity extends VideoBaseActivity{
 
     /**
      *
-     * @param newConfig
+     * @param newConfig 横竖屏config
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -330,8 +335,6 @@ public class VideoActivity extends VideoBaseActivity{
             rlVideoLayoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
             rlVideo.setLayoutParams(rlVideoLayoutParams);
 
-
-
             if(mDanmakuView!=null&& mVideoView!=null && mVideoView.getHeight()!=0){
                 ViewGroup.LayoutParams params = mDanmakuView.getLayoutParams();
                 params.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -339,11 +342,6 @@ public class VideoActivity extends VideoBaseActivity{
                 mDanmakuView.setLayoutParams(params);
             }
             rlCommentSend.setVisibility(View.GONE);
-//            if (Build.VERSION.SDK_INT >= 14) {//View.SYSTEM_UI_FLAG_VISIBLE：显示状态栏
-//                //这句话导致第一次点击没有反应
-//                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-//            }
-//            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_LAYOUT_FLAGS|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }else{//竖屏
             isLandscape = false;
             llInfo.setVisibility(View.VISIBLE);
@@ -378,9 +376,14 @@ public class VideoActivity extends VideoBaseActivity{
             mFloatPlay.setVisibility(View.VISIBLE);
         }
     }
+
     private void showOrientationBar(){
-        ivBack.setVisibility(View.VISIBLE);
-        tvShare.setVisibility(View.VISIBLE);
+        if (ivBack != null) {
+            ivBack.setVisibility(View.VISIBLE);
+        }
+        if (tvShare != null) {
+            tvShare.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -393,15 +396,9 @@ public class VideoActivity extends VideoBaseActivity{
         if (savedInstanceState != null) {
             return;
         }
-
         // 创建一个要放入 Activity 布局中的新 Fragment
         VideoInfoFragment fragment = new VideoInfoFragment();
-
-        // 如果此 Activity 是通过 Intent 发出的特殊指令来启动的，
-        // 请将该 Intent 的 extras 以参数形式传递给该 Fragment
         fragment.setArguments(getIntent().getExtras());
-
-        // 将该 Fragment 添加到“fragment_container”FrameLayout 中
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fl_info, fragment).commit();
 
@@ -433,7 +430,7 @@ public class VideoActivity extends VideoBaseActivity{
                 backBitMap = FastBlur.doBlur(getApplicationContext(), bmp, 20, true);
                 int sdk = android.os.Build.VERSION.SDK_INT;
                 if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    ly.setBackgroundDrawable(new BitmapDrawable(getResources(), backBitMap));
+                    ly.setBackground(new BitmapDrawable(getResources(), backBitMap));
                 } else {
                     ly.setBackground(new BitmapDrawable(getResources(), backBitMap));
                 }
@@ -503,7 +500,7 @@ public class VideoActivity extends VideoBaseActivity{
     }
     /**
      * 栏目切换
-     * @param view
+     * @param view 视角radioButton
      */
     @OnClick({R.id.radio1,R.id.radio2,R.id.radio3,R.id.radio4})
     void changeVideoClick(View view){
@@ -525,7 +522,7 @@ public class VideoActivity extends VideoBaseActivity{
 
     /**
      * 视角切换
-     * @param targetVideo
+     * @param targetVideo 目标视频地址
      */
     private void changeVideoAngle(String targetVideo) {
         if(!currentPath.equals(targetVideo)){
@@ -540,8 +537,9 @@ public class VideoActivity extends VideoBaseActivity{
     @Override
     protected void onPause() {
         super.onPause();
+        //暂停并修改按钮图片
         if (mDanmakuView != null && mDanmakuView.isPrepared()) {
-            mDanmakuView.pause();
+            clickPlay();
         }
     }
 
@@ -569,6 +567,7 @@ public class VideoActivity extends VideoBaseActivity{
     @Override
     protected void onStop() {
         super.onStop();
+        Log.e(TAG,"~~~~~~onStop~~~~~");
         if (mBackPressed || !mVideoView.isBackgroundPlayEnabled()) {
             mVideoView.stopPlayback();
             mVideoView.release(true);

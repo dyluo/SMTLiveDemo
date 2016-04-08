@@ -10,11 +10,13 @@
     <dimen name="txt_size18">18sp</dimen>
     <dimen name="txt_size16">16sp</dimen>
     <dimen name="txt_size15">15sp</dimen>
+    <dimen name="padding10">10dp</dimen>
     <dimen name="padding15">15dp</dimen>
     <dimen name="padding19">19dp</dimen>
     <dimen name="padding20">20dp</dimen>
     <dimen name="padding27">27dp</dimen>
     <dimen name="padding29">29dp</dimen>
+    <dimen name="padding31">31dp</dimen>
     <dimen name="video_bottom_height">56dp</dimen>
     <dimen name="txt_size14">14sp</dimen>
     <dimen name="txt_size13">13sp</dimen>
@@ -31,4 +33,7 @@
     <dimen name="padding33">33dp</dimen>
     <dimen name="padding32">32dp</dimen>
     <dimen name="height28">28dp</dimen>
+    <dimen name="padding14">14dp</dimen>
+    <dimen name="padding8">8dp</dimen>
+    <dimen name="padding4">4dp</dimen>
 </resources>

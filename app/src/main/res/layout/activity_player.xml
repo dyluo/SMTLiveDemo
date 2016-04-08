@@ -32,5 +32,6 @@
         android:background="@mipmap/btn_play_float"
         app:layout_anchor="@+id/rl_video"
         app:layout_anchorGravity="bottom|end|right"
-        android:layout_margin="@dimen/padding29"/>
+        android:layout_margin="@dimen/padding29"
+        android:contentDescription="@string/app_name"/>
 </android.support.design.widget.CoordinatorLayout>

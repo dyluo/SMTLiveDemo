@@ -5,6 +5,7 @@ import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.Image;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -154,7 +156,7 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     }
     protected void resetTopBarMargin(){
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT ){
-           rlVideoTop.setPadding(0, DensityUtils.dp2px(mContext,31)- WindowUtils.getStatusBarHeight(mContext),0,0);
+           rlVideoTop.setPadding(DensityUtils.dp2px(mContext, 15), DensityUtils.dp2px(mContext,31)- WindowUtils.getStatusBarHeight(mContext),DensityUtils.dp2px(mContext,15),0);
         }
     }
 
@@ -202,7 +204,6 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
         super.onConfigurationChanged(newConfig);
         if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE) {//横屏
             if(!isLandscape) {
-                Log.e(TAG,rlVideoTop.getAlpha()+">>"+rlVideoTop.getTranslationY());
                 ViewCompat.animate(rlVideoTop).alpha(1).translationY(0).setDuration(100).start();
                 isLandscape = true;
                 showPlayMenu(true);
@@ -218,7 +219,6 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
             btnLockRight.setVisibility(View.GONE);
         }
         preparedDanMu();
-//        showVideoBottom(isLandscape);
     }
 
     /**
@@ -319,21 +319,26 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
 
     @OnClick({R.id.btn_play,R.id.float_play})
     void clickPlay(){
+        rlVideoControl.setBackgroundResource(0);
         if(mVideoView!= null && mVideoView.canPause() && mVideoView.isPlaying()){
             mVideoView.pause();
-            mFloatPlay.setImageResource(R.mipmap.btn_pause_float);
+            mFloatPlay.setImageResource(R.mipmap.btn_play_float);
+            btnPlay.setBackgroundResource(R.mipmap.btn_full_play);
         }else if(mVideoView!=null && !mVideoView.isPlaying()){
             mVideoView.start();
-            mFloatPlay.setImageResource(R.mipmap.btn_play_float);
+            mFloatPlay.setImageResource(R.mipmap.btn_pause_float);
+            btnPlay.setBackgroundResource(R.mipmap.btn_full_pause);
         }
     }
     @OnClick(R.id.tv_send_switch)
     void clickDanmuSwitch(){
-        Log.e(TAG, "~~~~" + mDanmakuView.isShown() + ">>" + mDanmakuView.isPaused());
+//        Log.e(TAG, "~~~~" + mDanmakuView.isShown() + ">>" + mDanmakuView.isPaused());
         if (mDanmakuView != null && mDanmakuView.isPrepared() && !mDanmakuView.isPaused()) {
             mDanmakuView.hideAndPauseDrawTask();
+            btnSendSwitch.setBackgroundResource(R.mipmap.btn_danmu_select);
         }else if(mDanmakuView!= null && mDanmakuView.isPaused()){
             mDanmakuView.showAndResumeDrawTask(SystemClock.currentThreadTimeMillis() - startPlayTimes);
+            btnSendSwitch.setBackgroundResource(R.mipmap.btn_danmu);
 //            mDanmakuView.show();
 //            mDanmakuView.resume();
         }
@@ -343,12 +348,13 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
      * 横竖屏切换的时候，初始化弹幕，或者
      */
     void preparedDanMu(){
-        if (mDanmakuView != null && !mDanmakuView.isPrepared()){
+        if (mDanmakuView != null && !mDanmakuView.isPrepared() && mVideoView.isPlaying()){
             mDanmakuView.prepare(mParser, mDanmakuContext);
             return;
         }
         if(isLandscape && mDanmakuView!= null && mDanmakuView.isPrepared()){
             mDanmakuView.showAndResumeDrawTask(SystemClock.currentThreadTimeMillis() - startPlayTimes);
+
         }else if(!isLandscape && mDanmakuView!= null && mDanmakuView.isPrepared()){
             mDanmakuView.hideAndPauseDrawTask();
         }
@@ -363,7 +369,6 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
 //        }
         mHandler.removeMessages(MESSAGE_FADE_OUT);
         if(show){//显示播控信息
-//            rlVideoTop.setTranslationY(-rlVideoTop.getHeight());
             ViewCompat.animate(rlVideoTop).alpha(1).translationY(0).setDuration(500).start();
             showVideoBottom(show);
             mHandler.sendEmptyMessageDelayed(MESSAGE_FADE_OUT, TIME_FADE_OUT);

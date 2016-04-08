@@ -18,4 +18,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="txt_comment_more">查看更多评论...</string>
     <string name="title_recommend">精彩推荐</string>
     <string name="intors">荷兰与巴萨的昔日足球巨星快乐衣服因癌症去世，享年68岁。巴萨俱乐部将半旗向传奇紫荆。荷兰与巴萨的昔日足球巨星快乐衣服因癌症去世，享年68岁。巴萨俱乐部将半旗向传奇紫荆。</string>
+    <string name="tv_angle">视角</string>
+    <string name="tv_ratio">画质</string>
+    <string name="contentDescription">图片说明</string>
+    <string name="value_50">50%</string>
 </resources>

@@ -15,10 +15,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/ll_video_control">
+        android:id="@+id/ll_video_control"
+        android:background="@mipmap/bb">
         <!--播控布局 -->
         <include layout="@layout/video_bottom"
             android:layout_width="wrap_content"
@@ -31,18 +34,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@mipmap/tv_lock"
-            android:layout_marginLeft="@dimen/padding15"
-            android:visibility="gone"/>
+            android:layout_marginStart="@dimen/padding15"
+            android:visibility="gone"
+            android:contentDescription="@string/contentDescription"/>
         <!--右锁屏按钮 -->
         <ImageButton
             android:id="@+id/btn_lock_right"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@mipmap/tv_lock"
-            android:layout_marginRight="@dimen/padding15"
-            android:visibility="gone"/>
+            android:layout_marginEnd="@dimen/padding15"
+            android:visibility="gone"
+            android:contentDescription="@string/contentDescription"/>
         <!--声音 -->
         <LinearLayout
             android:id="@+id/app_video_volume_box"
@@ -53,23 +58,23 @@
             android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            >
+            android:layout_marginBottom="20dp">
 
             <ImageView
                 android:id="@+id/app_video_volume_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@mipmap/ic_volume_up_white_36dp"/>
+                android:src="@mipmap/ic_volume_up_white_36dp"
+                android:contentDescription="@string/contentDescription"/>
 
             <TextView
                 android:id="@+id/app_video_volume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="50%"
+                android:text="@string/value_50"
                 android:textColor="@android:color/white"
-                android:textSize="18dp"/>
+                android:textSize="@dimen/txt_size18"/>
         </LinearLayout>
         <!-- brightness-->
         <LinearLayout
@@ -88,17 +93,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@mipmap/ic_brightness_6_white_36dp"/>
+                android:src="@mipmap/ic_brightness_6_white_36dp"
+                android:contentDescription="@string/contentDescription"/>
 
             <TextView
                 android:id="@+id/app_video_brightness"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/operation_bg"
                 android:paddingTop="8dp"
-                android:text="50%"
+                android:text="@string/value_50"
                 android:textColor="@android:color/white"
-                android:textSize="16dp"/>
+                android:textSize="@dimen/txt_size16"/>
         </LinearLayout>
         <ProgressBar
             android:id="@+id/progressBar"

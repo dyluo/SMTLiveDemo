@@ -85,9 +85,9 @@ public class BaseActivity extends AppCompatActivity {
      * @param hide
      */
     protected void hideSystemBar(boolean hide){
-        if(!isLandscape){
-            return;
-        }
+//        if(!isLandscape){
+//            return;
+//        }
         if(hide){
 //            WindowUtils.hideSystemUI(getWindow().getDecorView());
             WindowManager.LayoutParams lp = getWindow().getAttributes();

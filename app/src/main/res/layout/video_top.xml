@@ -4,9 +4,9 @@
     android:layout_height="62dp"
     android:background="@mipmap/bg_video_top"
     android:id="@+id/toolbar"
-    android:paddingLeft="@dimen/padding15"
-    android:paddingRight="@dimen/padding15"
-    android:paddingTop="31dp" >
+    android:paddingStart="@dimen/padding15"
+    android:paddingEnd="@dimen/padding15"
+    android:paddingTop="@dimen/padding31" >
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,39 +15,39 @@
             android:id="@+id/iv_arrow_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_back_selector"/>
+            android:background="@drawable/btn_back_selector"
+            android:contentDescription="@string/app_name"/>
 
         <View
-            android:layout_marginLeft="7dp"
+            android:layout_marginStart="7dp"
             android:id="@+id/iv_div"
             android:layout_width="0.5dp"
             android:layout_height="15dp"
             android:background="@color/colorText_abb2c8" />
 
         <TextView
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/txt_size15"
-            android:text="我们"/>
+            android:textSize="@dimen/txt_size15"/>
     </LinearLayout>
     <LinearLayout
         android:gravity="bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentEnd="true">
         <TextView
             android:id="@+id/tv_angle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="视角"
+            android:text="@string/tv_angle"
             android:textColor="@color/colorText_abb2c8"
             android:textSize="@dimen/txt_size12"
-            android:paddingLeft="8dp"
-            android:paddingRight="4dp"
-            android:drawableRight="@mipmap/ic_pull_down"
+            android:paddingStart="8dp"
+            android:paddingEnd="4dp"
+            android:drawableEnd="@mipmap/ic_pull_down"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"/>
@@ -63,13 +63,13 @@
             android:id="@+id/tv_ratio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="画质"
+            android:text="@string/tv_ratio"
             android:textColor="@color/colorText_abb2c8"
             android:textSize="@dimen/txt_size12"
-            android:paddingLeft="8dp"
-            android:layout_marginRight="@dimen/padding27"
-            android:drawableRight="@mipmap/ic_pull_down"
-            android:drawablePadding="4dp"
+            android:paddingStart="@dimen/padding8"
+            android:layout_marginEnd="@dimen/padding27"
+            android:drawableEnd="@mipmap/ic_pull_down"
+            android:drawablePadding="@dimen/padding4"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"/>
 
@@ -77,14 +77,14 @@
             android:id="@+id/tv_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/padding27"
+            android:layout_marginEnd="@dimen/padding27"
             android:background="@drawable/btn_set_selector" />
 
         <ImageButton
             android:id="@+id/tv_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/padding27"
+            android:layout_marginEnd="@dimen/padding27"
             android:background="@drawable/btn_share_selector"/>
 
         <ImageButton
