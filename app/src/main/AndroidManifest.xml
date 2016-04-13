@@ -3,6 +3,7 @@
     package="cn.smg.luo.smtech_video">
 
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -35,7 +36,7 @@
         <activity android:name=".view.BehaviorActivity"  android:theme="@style/AppTheme.Transparent"/>
 
         <activity android:name=".activity.DetailActivity"
-            android:theme="@style/AppTheme.Transparent"/>
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

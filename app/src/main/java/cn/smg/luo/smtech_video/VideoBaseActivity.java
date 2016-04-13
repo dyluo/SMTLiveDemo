@@ -1,27 +1,25 @@
 package cn.smg.luo.smtech_video;
 
-import android.app.KeyguardManager;
-import android.app.admin.DevicePolicyManager;
+
+
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,16 +28,18 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 import cn.smg.luo.smtech_video.common.DensityUtils;
 import cn.smg.luo.smtech_video.common.WindowUtils;
+import cn.smg.luo.smtech_video.view.CommentDialog;
 import cn.smg.luo.smtech_video.widget.media.IjkVideoView;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import master.flame.danmaku.ui.widget.DanmakuView;
+
+;
 
 /**
  * @author jl_luo
@@ -136,7 +136,8 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
         mMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
         final GestureDetector gestureDetector = new GestureDetector(this, new PlayerGestureListener());
-        mDanmakuView.setOnTouchListener(new View.OnTouchListener() {
+        rlVideoControl.setClickable(true);
+        rlVideoControl.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (gestureDetector.onTouchEvent(event))
@@ -149,9 +150,10 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
                         break;
                 }
 
-                return false;
+                return true;
             }
         });
+
 
     }
     protected void resetTopBarMargin(){
@@ -168,6 +170,8 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
 //        if(!isLandscape){
 //            return ;
 //        }
+        if(!WindowUtils.checkDeviceHasNavigationBar(mContext))
+            return;
         if(hide) {
             int flags;
             int curApiVersion = android.os.Build.VERSION.SDK_INT;
@@ -188,7 +192,9 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
         }
     }
 
+
     private void endGesture() {
+        Log.e(TAG,"~~~~~~endGesture~~~~~~~");
         volume = -1;
         brightness = -1f;
         mHandler.removeMessages(MESSAGE_HIDE_CENTER_BOX);
@@ -281,10 +287,21 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
         return false;
     }
 
-
+    /**
+     * 全屏的时候发送弹幕事件
+     * 出现弹幕对话框和对应点击事件
+     */
     @OnClick(R.id.tv_send)
     void clickSend(){
-        Toast.makeText(getApplicationContext(),"tv_send",Toast.LENGTH_SHORT).show();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        // Create and show the dialog.
+        CommentDialog commentDialog =  CommentDialog.newInstance(2);
+        commentDialog.show(ft, "dialog");
     }
 
     /**
@@ -430,10 +447,8 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && isLock){
-            Log.e(TAG,"~~~~~~~~屏幕锁定不能放回~~~~~~~~~");
             return true;
         }else if(keyCode == KeyEvent.KEYCODE_MENU && isLock){
-            Log.e(TAG,"~~~~~~~home~~~~~~~~~~~");
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -447,12 +462,17 @@ public class VideoBaseActivity extends BaseActivity implements Handler.Callback{
         private boolean volumeControl;
         @Override
         public boolean onDown(MotionEvent e) {
+            Log.e(TAG,"我点击了额 ondown");
             firstTouch = true;
             return super.onDown(e);
         }
-
         @Override
-        public boolean onSingleTapUp(MotionEvent e) {Log.e(TAG,"我点击了~~~~~~~~~~");
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.e(TAG,"onSingleTapConfirmed~~~~~~~~~~");
+            return super.onSingleTapConfirmed(e);
+        }
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {Log.e(TAG,"我点击了结束onSingleTapUp~~~~~~~~~~");
 //            if(!isLandscape){//竖屏的时候点击
 //                Log.e(TAG,"我点击了~~~~~~~~~~");
 //                changeScreen();

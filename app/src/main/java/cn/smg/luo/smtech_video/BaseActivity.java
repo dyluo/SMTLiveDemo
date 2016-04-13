@@ -1,14 +1,11 @@
 package cn.smg.luo.smtech_video;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -19,7 +16,6 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.smg.luo.smtech_video.common.WindowUtils;
 
 /**
  * @author jl_luo
@@ -89,9 +85,12 @@ public class BaseActivity extends AppCompatActivity {
 //            return;
 //        }
         if(hide){
+            if(!isLandscape){
+                return;
+            }
 //            WindowUtils.hideSystemUI(getWindow().getDecorView());
             WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+            lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
             getWindow().setAttributes(lp);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 

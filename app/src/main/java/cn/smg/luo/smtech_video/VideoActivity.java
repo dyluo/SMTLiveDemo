@@ -5,16 +5,16 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,7 +27,6 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.OnClick;
 import cn.smg.luo.smtech_video.common.DensityUtils;
-import cn.smg.luo.smtech_video.common.FastBlur;
 import cn.smg.luo.smtech_video.model.VideoPath;
 import cn.smg.luo.smtech_video.view.VideoInfoFragment;
 import cn.smg.luo.smtech_video.widget.media.IjkVideoView;
@@ -40,7 +39,6 @@ import master.flame.danmaku.danmaku.loader.android.DanmakuLoaderFactory;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
 import master.flame.danmaku.danmaku.model.Danmaku;
 import master.flame.danmaku.danmaku.model.DanmakuTimer;
-import master.flame.danmaku.danmaku.model.IDanmakuIterator;
 import master.flame.danmaku.danmaku.model.IDanmakus;
 import master.flame.danmaku.danmaku.model.IDisplayer;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
@@ -65,7 +63,9 @@ public class VideoActivity extends VideoBaseActivity{
     @Bind(R.id.ll_info)LinearLayout llInfo;
     private boolean mBackPressed;
     //底部点评
-    @Bind(R.id.rl_comment_send)RelativeLayout rlCommentSend;
+    @Bind(R.id.rl_comment_send)FrameLayout rlCommentSend;
+    @Bind(R.id.rl_comment_send_body)RelativeLayout ivCommentBackGround;
+    @Bind(R.id.et_comment) EditText mEditCommentText;
     //模糊白色
     @Bind(R.id.bg_white) ImageView mBgWhite;
     //video的默认高度
@@ -80,7 +80,7 @@ public class VideoActivity extends VideoBaseActivity{
         initDamu();
         if (initIjkVideo()) return;
         initFragmentInfo(savedInstanceState);
-        applyBlur(mBgWhite, rlCommentSend);
+        applyBlur(mBgWhite);
     }
     private  void initBaseView(){
         title.setText("SHAV");
@@ -189,7 +189,7 @@ public class VideoActivity extends VideoBaseActivity{
 
                 @Override
                 public void danmakuShown(BaseDanmaku danmaku) {
-                    Log.w(TAG, "danmakuShown(): text=" + danmaku.text + ",time= " + danmaku.time);
+                    Log.v(TAG, "danmakuShown(): text=" + danmaku.text + ",time= " + danmaku.time);
                 }
 
                 @Override
@@ -202,12 +202,12 @@ public class VideoActivity extends VideoBaseActivity{
             mDanmakuView.setOnDanmakuClickListener(new IDanmakuView.OnDanmakuClickListener() {
                 @Override
                 public void onDanmakuClick(BaseDanmaku latest) {
-                    Log.w(TAG, "onDanmakuClick text:" + latest.text);
+                    Log.e(TAG, "onDanmakuClick text:" + latest.text);
                 }
 
                 @Override
                 public void onDanmakuClick(IDanmakus danmakus) {
-                    Log.w(TAG, "onDanmakuClick danmakus size:" + danmakus.size());
+                    Log.e(TAG, "onDanmakuClick danmakus size:" + danmakus.size());
                 }
             });
 
@@ -294,7 +294,7 @@ public class VideoActivity extends VideoBaseActivity{
      * @param text 发送弹幕文本
      */
     public void addDanmaku(boolean islive, String text) {
-        Log.e(TAG,"~~~~~~video currentposition~~~~"+mVideoView.getCurrentPosition());
+        Log.e(TAG,"~~~~~~addDanmaku~~~~"+text);
         BaseDanmaku danmaku = mDanmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
         if (danmaku == null || mDanmakuView == null) {
             return;
@@ -412,32 +412,30 @@ public class VideoActivity extends VideoBaseActivity{
     /**
      * 底部菜单高斯模糊处理
      * @param backImg 对应模糊处理的图片
-     * @param ly 底部菜单栏
      */
 //    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void applyBlur(final ImageView backImg, final View ly) {
+    private void applyBlur(final ImageView backImg) {
+        Log.e(TAG,"~~~~~~~~applyBlur~~~~~~~~~~~~");
         if(backBitMap!=null){
             return;
         }
-        backImg.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                backImg.setAlpha(0.2f);
-                backImg.getViewTreeObserver().removeOnPreDrawListener(this);
-                backImg.buildDrawingCache();
+        ivCommentBackGround.getBackground().setAlpha(0);
+//        backImg.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//                Log.e(TAG,"~~~~~~~~~~~~~~~~~~sdfasdf");
+//                backImg.getViewTreeObserver().removeOnPreDrawListener(this);
+//                backImg.buildDrawingCache();
+//                Bitmap bmp = backImg.getDrawingCache();
+//
+//                backBitMap = FastBlur.doBlur(getApplicationContext(), bmp, 15, true);
+//                ivCommentBackGround.setBackground(new BitmapDrawable(getResources(), backBitMap));
+////                bmp.recycle();
+//
+//                return true;
+//            }
+//        });
 
-                Bitmap bmp = backImg.getDrawingCache();
-                backBitMap = FastBlur.doBlur(getApplicationContext(), bmp, 20, true);
-                int sdk = android.os.Build.VERSION.SDK_INT;
-                if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    ly.setBackground(new BitmapDrawable(getResources(), backBitMap));
-                } else {
-                    ly.setBackground(new BitmapDrawable(getResources(), backBitMap));
-                }
-                bmp.recycle();
-                return true;
-            }
-        });
     }
 
     /**
@@ -534,6 +532,26 @@ public class VideoActivity extends VideoBaseActivity{
         }
     }
 
+    /**
+     * 发送弹幕事件
+     */
+    @OnClick(R.id.tv_send_danmu)
+    void clickSendComment(){
+        String comment = mEditCommentText.getText().toString();
+        if(!TextUtils.isEmpty(comment) ){//&& mDanmakuView.isPrepared()
+            Snackbar snackbar = Snackbar
+                    .make(rlVideo, "发送成功", Snackbar.LENGTH_LONG);
+
+            View v = snackbar.getView();
+            v.setBackgroundColor(ContextCompat.getColor(mContext,R.color.colorFloatAction));
+            snackbar.show();
+        }else{
+            Snackbar snackbar = Snackbar
+                    .make(rlVideo, "error~", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -585,6 +603,10 @@ public class VideoActivity extends VideoBaseActivity{
             // dont forget release!
             mDanmakuView.release();
             mDanmakuView = null;
+        }
+        if(backBitMap!=null){
+            backBitMap.recycle();
+            backBitMap = null;
         }
     }
 }

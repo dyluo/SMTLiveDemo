@@ -6,8 +6,7 @@
     tools:context=".VideoActivity"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
     <!-- The main content view -->
     <FrameLayout
@@ -16,7 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:background="@android:color/white">
             <include layout="@layout/video_play"/>
 
             <include layout="@layout/ll_video_content"/>

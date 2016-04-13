@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="254dp"
+    android:layout_height="@dimen/video_height"
     android:id="@+id/rl_video"
     android:clickable="true">
     <cn.smg.luo.smtech_video.widget.media.IjkVideoView
@@ -14,8 +14,6 @@
         android:id="@+id/sv_danmaku"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-
 
     <RelativeLayout
         android:layout_width="match_parent"

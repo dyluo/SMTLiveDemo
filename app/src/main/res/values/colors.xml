@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#54d196</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryDark">#54d196</color>
+    <color name="colorAccent">#54d196</color>
     <color name="ijk_transparent_dark">#77000000</color>
     <color name="colorCityDay">#95777272</color>
 
@@ -18,5 +18,6 @@
     <color name="color888c98">#888c98</color>
     <color name="colorText_abb2c8">#abb2c8</color>
     <color name="colorBack60000">#60000000</color>
+    <color name="colorWhite60000">#7fffffff</color>
     <color name="white">#ffffff</color>
 </resources>

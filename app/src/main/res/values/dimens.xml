@@ -36,4 +36,9 @@
     <dimen name="padding14">14dp</dimen>
     <dimen name="padding8">8dp</dimen>
     <dimen name="padding4">4dp</dimen>
+    <dimen name="padding50">50dp</dimen>
+    <dimen name="padding5">5dp</dimen>
+    <dimen name="width6">6dp</dimen>
+    <!--254dp 202-->
+    <dimen name="video_height">254dp</dimen>
 </resources>
