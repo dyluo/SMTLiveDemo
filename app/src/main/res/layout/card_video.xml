@@ -27,7 +27,8 @@
                 android:layout_height="123dp"
                 android:contentDescription="@string/action_settings"
                 android:src="@mipmap/bb"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:background="@mipmap/bg_video_item"/>
         </RelativeLayout>
 
 
